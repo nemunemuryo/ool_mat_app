@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  dp_port1: MyString
+  dp_port2: MyString
+  delay: 1.5
+
+two:
+  dp_port1: MyString
+  dp_port2: MyString
+  delay: 1.5
