@@ -1,5 +1,38 @@
 <h1>Topology#show</h1>
 
-<div id="topology">
-  <%= render @topologies %>
-</div>
+<% arr = Array.new %>
+<% @topologies.each do |topo| %>
+  <%= p topo.dp_port1.split("-") %>
+  <% arr << topo.dp_port1.split("-")[0] %>
+<% end %>
+
+<% arr = arr.uniq %>
+
+<p><%= arr %></p>
+
+<section class="main-contents">
+  <section class="circle-box">
+    <% arr.each do |i| %>
+      <div class="item"></div>
+    <% end %>
+  </section>
+</section>
+
+<script>
+setInterval("location.reload()",60000);
+</script>
+
+<script>
+$(function(){
+    var item_num = $('div.item').length;
+    var deg = 360.0/item_num;
+    var red = (deg*Math.PI/180.0);
+    var circle_r = $("div.item").width() * 2.5;
+    $('div.item').each(function(i, elem) {
+        var x = Math.cos(red * i) * circle_r + circle_r;
+        var y = Math.sin(red * i) * circle_r + circle_r;
+        $(elem).css('left', x);
+        $(elem).css('top', y);
+    });
+});
+</script>
