@@ -38,8 +38,8 @@ jsarr = jsarr.split(',')
 console.log(jsarr)
 
 // スイッチの数だけ表示する
-function createDataSet(){
-  var data = []
+function createSwitchDataSet(){
+  let data = []
   for(i=1; i <= jscount; i++) {
     data[data.length] = {id: i, label: `Node ${jsarr[i-1]}`}
   }
@@ -47,7 +47,7 @@ function createDataSet(){
 }
 
 // create an array with nodes
-var nodes = new vis.DataSet(createDataSet());
+var nodes = new vis.DataSet(createSwitchDataSet());
 
 // create an array with edges
 var edges = new vis.DataSet([
