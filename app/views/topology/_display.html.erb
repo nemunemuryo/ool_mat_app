@@ -1,4 +1,26 @@
 <script>
+let topology = gon.topologies
+
+// スイッチ情報だけ取り出す
+var a = []
+var b = []
+for (var i=1; i<=topology.length; ++i) {
+  a[a.length] = topology[i-1].dp_port1.split("-")[0];
+  b[b.length] = topology[i-1].dp_port2.split("-")[0];
+}
+
+// 配列の結合
+a = a.concat(b);
+
+// 重複を取り除く
+const distinctSwitch = a.reduce(
+  (distinct, num) =>
+    (distinct.indexOf(num) !== -1) ? distinct : [...distinct, num]
+  , []
+)
+</script>
+
+<script>
 
 // スイッチのデータを生成する
 function createSwitchDataSet(){

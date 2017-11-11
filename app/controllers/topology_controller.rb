@@ -4,4 +4,9 @@ class TopologyController < ApplicationController
     @topologies = Topology.all
     gon.topologies = @topologies
   end
+
+  def edit
+    @topologies = Topology.all
+    gon.topologies = @topologies
+  end
 end
