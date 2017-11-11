@@ -1,23 +1,9 @@
 // Place all the styles related to the topology controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-// div.box{
-//     background-color:#CCCCFF;
-//     width:200px;
-//     height:100px;
-// }
-//
-// .main-contents {
-//     position: relative;
-//     width: 100%;
-// }
-// .circle-box {
-//     position: relative;
-//     margin: 0 auto;
-// }
-// div.item {
-//     position: absolute;
-//     width: 140px;
-//     height: 40px;
-//     background-color: #999;
-// }
+
+#mynetwork {
+    width: 100%;
+    height: 700px;
+    border: 1px solid lightgray;
+}

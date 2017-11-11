@@ -1,35 +1,29 @@
-<h1>Topology#show</h1>
+<h1>Home</h1>
+
+<h2>見方</h2>
+<p>
+  例) 2-2 3-3 15ms <br>
+  スイッチ2のポート2と, スイッチ3のポート3がつながっていて, 遅延量は15msです
+</p>
 
 <!-- 無理矢理リロードするよ -->
 <!-- <script>
-setInterval("location.reload()",60000);
+setInterval("location.reload()",30000);
 </script> -->
 
-<!-- スイッチ数をわりだす -->
-
-<!-- visjsでネットワークを表示 -->
-<style>
-    #mynetwork {
-        width: 600px;
-        height: 400px;
-        border: 1px solid lightgray;
-    }
-</style>
-
 <div id="mynetwork"></div>
-
 <script>
-//console.log(gon.topologies);
+let topology = gon.topologies
+
+// スイッチ情報だけ取り出す
 var a = []
 var b = []
-for (var i=1; i<=gon.topologies.length; ++i) {
-  a[a.length] = gon.topologies[i-1].dp_port1.split("-")[0];
-  b[b.length] = gon.topologies[i-1].dp_port2.split("-")[0];
-  // console.log(i + ": " + element);
+for (var i=1; i<=topology.length; ++i) {
+  a[a.length] = topology[i-1].dp_port1.split("-")[0];
+  b[b.length] = topology[i-1].dp_port2.split("-")[0];
 }
 
-console.log(a)
-console.log(b)
+// 配列の結合
 a = a.concat(b);
 
 // 重複を取り除く
@@ -38,59 +32,6 @@ const distinctSwitch = a.reduce(
     (distinct.indexOf(num) !== -1) ? distinct : [...distinct, num]
   , []
 )
-
-console.log(distinctSwitch)
-
-// スイッチの数だけ表示する
-function createSwitchDataSet(){
-  let data = []
-  for(i=1; i <= distinctSwitch.length; i++) {
-    data[data.length] = {id: i, label: `Node ${distinctSwitch[i-1]}`}
-  }
-  return data
-}
-
-// create an array with nodes
-var nodes = new vis.DataSet(createSwitchDataSet());
-
-function createPortDataSet(){
-  let data = []
-  for(i=1; i <= gon.topologies.length; ++i) {
-    if (gon.topologies[i-1].dp_port2 == null) {
-      // data[data.length] = {from: gon.topologies[i-1].dp_port1.split("-")[0] , to: gon.topologies[i-1].dp_port2.split("-")[0], label: `${gon.topologies[i-1].port1} ${gon.topologies[i-1].port2} , ${gon.topologies[i-1].delay}`}
-    }else {
-      data[data.length] = {from: gon.topologies[i-1].dp_port1.split("-")[0] , to: gon.topologies[i-1].dp_port2.split("-")[0], label: `${gon.topologies[i-1].dp_port1} ${gon.topologies[i-1].dp_port2} , ${gon.topologies[i-1].delay}`}
-    }
-  }
-  return data
-}
-
- var edges = new vis.DataSet(createPortDataSet());
-// create an array with edges
-// var edges = new vis.DataSet([
-//     {from: 1, to: 3, label:"hgoe"},
-//     {from: 1, to: 2},
-//     {from: 2, to: 4},
-//     {from: 2, to: 5}
-// ]);
-
-// create a network
-var container = document.getElementById('mynetwork');
-
-// provide the data in the vis format
-var data = {
-    nodes: nodes,
-    edges: edges
-};
-var options = {
-  edges:{
-    color: {
-      color:'#FE2E2E'
-    }
-    // label:"revenue"
-  }
-};
-
-// initialize your network!
-var network = new vis.Network(container, data, options);
 </script>
+
+<%= render :partial => "display" %>
