@@ -8,5 +8,12 @@ class TopologyController < ApplicationController
   def edit
     @topologies = Topology.all
     gon.topologies = @topologies
+    @vlans = Vlan.all
+    gon.vlans = @vlans
+  end
+
+  def modify
+    @topologies = Topology.all
+    gon.topologies = @topologies
   end
 end

@@ -1,0 +1,8 @@
+<script>
+// 重複を取り除く
+const distinctSwitches = switches.reduce(
+  (distinct, num) =>
+  (distinct.indexOf(num) !== -1) ? distinct : [...distinct, num]
+  , []
+)
+</script>

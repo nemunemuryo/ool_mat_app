@@ -1,2 +1,27 @@
-<div id="mynetwork"></div>
-<%= render :partial => "display" %>
+<%= render :partial => "divide" %>
+
+<p>今ホストがつながっているポート</p>
+<p>
+<script>
+document.write(selections)
+</script>
+</p>
+
+<p>ポートを1つ選んでください</p>
+<form name="select">
+<input type="text" name="selectPort">
+<input type="button" value="決定" onclick="tbox1()"><br>
+</form>
+
+<script>
+function tbox1() {
+  let str = document.select.selectPort.value;
+  for (var i=0; i<gon.vlans.length; i++) {
+    if (str == gon.vlans[i].start || str == gon.vlans[i].end) {
+      // alert(str + "は" + gon.vlans[i].vlanid + "です")
+      location.href = "http://0.0.0.0:3000/modify";
+    }
+  }
+}
+
+</script>

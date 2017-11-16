@@ -10,12 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171106032814) do
+ActiveRecord::Schema.define(version: 20171114052131) do
 
   create_table "topologies", force: :cascade do |t|
     t.string "dp_port1"
     t.string "dp_port2"
     t.float "delay"
+    t.string "judge"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "vlans", force: :cascade do |t|
+    t.integer "vlanid"
+    t.string "start"
+    t.string "end"
+    t.string "path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

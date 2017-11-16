@@ -1,0 +1,19 @@
+<script>
+let topology = gon.topologies
+
+let switches = []
+let hosts = []
+let selections = []
+
+// スイッチとホストを分けて取り出す
+for (var i=0; i<topology.length; i++) {
+  if (topology[i].dp_port2 != null) {
+    if (topology[i].dp_port2.match(/-/)) {
+      switches.push(topology[i].dp_port1.split("-")[0], topology[i].dp_port2.split("-")[0]);
+    }else {
+      hosts.push(topology[i].dp_port2);
+      selections.push(topology[i].dp_port1);
+    }
+  }
+}
+</script>
