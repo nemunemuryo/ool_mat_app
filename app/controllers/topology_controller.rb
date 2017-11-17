@@ -16,4 +16,8 @@ class TopologyController < ApplicationController
     @topologies = Topology.all
     gon.topologies = @topologies
   end
+
+  def update
+    @hoge = Vlan.find_by(vlanid: 10).update_attribute(:path, params[:path])
+  end
 end

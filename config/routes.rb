@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   # get 'topology/show'
   # get 'topology/edit'
+  get 'topology/update'
 
   root to: 'topology#show'
   get 'edit', to: 'topology#edit'
