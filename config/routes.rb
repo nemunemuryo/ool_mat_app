@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   # get 'topology/show'
   # get 'topology/edit'
   get 'topology/update'
+  get 'topology/addvlan'
 
   root to: 'topology#show'
   get 'edit', to: 'topology#edit'

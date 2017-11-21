@@ -80,6 +80,7 @@ let comparison = [];
 let a = [];
 let start_end = [];
 
+// 画面内がクリックされた時
 network.on("click", function (params) {
   if (params.edges[0].match(/,/)) {
     comparison = params.edges[0].split(",");
@@ -91,32 +92,70 @@ network.on("click", function (params) {
     // console.log(comparison)
     tmp = comparison[1][0];
     path += comparison + ",";
-  } else {
+  }else {
     tmp = params.edges[0][0]
     start_end.push(params.edges[0])
-    console.log(start_end)
+    //console.log(start_end)
     path += params.edges[0] + ",";
   }
 });
 
+
+// ボタンクリック時
 function OnButtonClick() {
   target = document.getElementById("output");
   target2 = document.getElementById("output2");
   target.innerHTML = path.slice(0, -1)
   target2.innerHTML = start_end
-  $.ajax({
-    url: 'http://0.0.0.0:3000/topology/update',
-    type: 'GET',
-    data: {
-      path: path.slice(0, -1)
+  let judge = 0;
+  for(let i=0; i < gon.vlans.length; i++) {
+    if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
+      judge++;
+      $.ajax({
+        url: 'http://0.0.0.0:3000/topology/update',
+        type: 'GET',
+        data: {
+          path: path.slice(0, -1),
+          start: start_end[0],
+          end: start_end[1]
+        }
+      })
+      .done(function(response){
+        console.log("success")
+      })
+      .fail(function(xhr){
+        console.log("feild")
+      });
+      break;
     }
-  })
-  .done(function(response){
-    console.log("success")
-  })
-  .fail(function(xhr){
-    console.log("feild")
-  });
+
+  }
+    if(judge==0) {
+      let vlan_num=prompt("こんにちは\nあなたの\tハンドルネーム\tを入力して下さい", "hoge");
+      if(vlan_num==null){
+       /* [キャンセル]ボタンが押下された場合 */
+       alert("作成しませんでした");
+      }else{
+       /* 入力値を表示 */
+      $.ajax({
+        url: 'http://0.0.0.0:3000/topology/addvlan',
+        type: 'GET',
+        data: {
+          newVlan: vlan_num,
+          start: start_end[0],
+          end: start_end[1],
+          path: path.slice(0, -1)
+        }
+      })
+      .done(function(response){
+        console.log("success")
+      })
+      .fail(function(xhr){
+        console.log("feild")
+      });
+     }
+      judge--;
+    }
 
 }
 </script>

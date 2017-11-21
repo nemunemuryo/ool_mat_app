@@ -15,9 +15,19 @@ class TopologyController < ApplicationController
   def modify
     @topologies = Topology.all
     gon.topologies = @topologies
+    @vlans = Vlan.all
+    gon.vlans = @vlans
   end
 
   def update
-    @hoge = Vlan.find_by(vlanid: 10).update_attribute(:path, params[:path])
+    if Vlan.find_by(start: params[:start])
+      Vlan.find_by(start: params[:start]).update_attribute(:path, params[:path])
+    elsif Vlan.find_by(end: params[:start])
+      Vlan.find_by(end: params[:start]).update_attribute(:path, params[:path])
+    end
+  end
+
+  def addvlan
+    Vlan.create(vlanid: params[:newVlan], start: params[:start], end: params[:end], path: params[:path])
   end
 end
