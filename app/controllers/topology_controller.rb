@@ -1,17 +1,11 @@
 class TopologyController < ApplicationController
+
   def show
     @topologies = Topology.all
     gon.topologies = @topologies
   end
 
   def edit
-    @topologies = Topology.all
-    gon.topologies = @topologies
-    @vlans = Vlan.all
-    gon.vlans = @vlans
-  end
-
-  def modify
     @topologies = Topology.all
     gon.topologies = @topologies
     @vlans = Vlan.all
@@ -29,4 +23,12 @@ class TopologyController < ApplicationController
   def addvlan
     Vlan.create(vlanid: params[:newVlan], start: params[:start], end: params[:end], path: params[:path])
   end
+
+  def vlans
+    @topologies = Topology.all
+    gon.topologies = @topologies
+    @vlans = Vlan.find(1)
+    gon.vlans = @vlans
+  end
+
 end
