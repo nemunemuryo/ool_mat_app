@@ -27,7 +27,7 @@ class TopologyController < ApplicationController
   def vlans
     @topologies = Topology.all
     gon.topologies = @topologies
-    @vlans = Vlan.find(1)
+    @vlans = Vlan.find(2)
     gon.vlans = @vlans
   end
 

@@ -21,5 +21,11 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  database: db/production.sqlite3
+  adapter: mysql2
+  database: ryu_db
+  host: 10.50.0.100
+  port: 3306
+  username: root
+  password:
+  # <<: *default
+  # database: db/production.sqlite3

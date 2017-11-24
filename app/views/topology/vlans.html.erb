@@ -27,63 +27,47 @@ for(i=0; i < hosts.length; i++) {
 // 繋がりを表示する
 let edges = [];
 
-console.log(gon.vlans.path)
 let testString = gon.vlans.path
 let hoge = testString.split("|")
-let foo = hoge[1].split(",");
-let foo2 = hoge[2].split(",");
-// for (let i=0; i<hoge.length; i++) {
-//   if ( hoge[i].match(/,/) ) {
-//     let foo = hoge[i].split(",");
-//     edges.push({
-//       from: foo[0][0],
-//       to: foo[1][0],
-//       dashes: false
-//     })
-//   }else {
-//     for(let j=0; j<gon.topologies.length; j++) {
-//       if(gon.topologies[j].dp_port1 == hoge[i]) {
-//         edges.push({
-//           from: hoge[i][0],
-//           to: gon.topologies[j].dp_port2,
-//           dashes: false
-//         })
-//       }
-//     }
-//   }
-// }
+let foo = [];
+for (let i = 1; i<hoge.length-1; i++) {
+  console.log(hoge[i].split(","))
+  foo = foo.concat(hoge[i].split(","))
+}
+console.log(foo)
+
 for(i=0; i < gon.topologies.length; i++) {
-  if (topology[i].dp_port2 != null) {
+  if (topology[i].dport2 != null) {
     // スイッチ間の繋がりを表示
-    if (topology[i].dp_port2.match(/-/)) {
-      if (foo[0] == topology[i].dp_port2 || foo[1] == topology[i].dp_port2 || foo2[0] == topology[i].dp_port2 || foo2[1] == topology[i].dp_port2 ) {
+    if (topology[i].dport2.match(/-/)) {
+      if (foo.indexOf(topology[i].dp_port2) >= 0) {// || foo[1][0] == topology[i].dp_port2 || foo[1][1] == topology[i].dp_port2 ) {
         edges.push({
-          from: topology[i].dp_port1.split("-")[0],
-          to: topology[i].dp_port2.split("-")[0],
-          label: `${topology[i].dp_port1} ${topology[i].dp_port2} \n ${topology[i].delay}ms`,
+          from: topology[i].dport1.split("-")[0],
+          to: topology[i].dport2.split("-")[0],
+          label: `${topology[i].dport1} ${topology[i].dport2} \n ${topology[i].delay}ms`,
           dashes: false
         });
       }else {
         edges.push({
-          from: topology[i].dp_port1.split("-")[0],
-          to: topology[i].dp_port2.split("-")[0],
-          label: `${topology[i].dp_port1} ${topology[i].dp_port2} \n ${topology[i].delay}ms`,
+          from: topology[i].dport1.split("-")[0],
+          to: topology[i].dport2.split("-")[0],
+          label: `${topology[i].dport1} ${topology[i].dport2} \n ${topology[i].delay}ms`,
         });
       }
     }else {
-    // スイッチとホスト間の繋がりを表示
-      if (hoge[0] == topology[i].dp_port1 || hoge[3] == topology[i].dp_port1) {
+      // スイッチとホスト間の繋がりを表示
+      if (hoge[0] == topology[i].dport1 || hoge[hoge.length-1] == topology[i].dport1) {
         edges.push({
-          from: topology[i].dp_port1.split("-")[0],
-          to: topology[i].dp_port2,
-          label: `${topology[i].dp_port1}`,
+          from: topology[i].dport1.split("-")[0],
+          to: topology[i].dport2,
+          label: `${topology[i].dport1}`,
           dashes: false
         });
       }else{
         edges.push({
-          from: topology[i].dp_port1.split("-")[0],
-          to: topology[i].dp_port2,
-          label: `${topology[i].dp_port1}`
+          from: topology[i].dport1.split("-")[0],
+          to: topology[i].dport2,
+          label: `${topology[i].dport1}`
         });
       }
     }

@@ -28,20 +28,20 @@ for(i=0; i < hosts.length; i++) {
 let edges = [];
 
 for(i=0; i < gon.topologies.length; i++) {
-  if (topology[i].dp_port2 != null) {
-    if (topology[i].dp_port2.match(/-/)) {
+  if (topology[i].dport2 != null) {
+    if (topology[i].dport2.match(/-/)) {
       edges.push({
-        id: topology[i].dp_port1 + "," + topology[i].dp_port2,
-        from: topology[i].dp_port1.split("-")[0],
-        to: topology[i].dp_port2.split("-")[0],
-        label: `${topology[i].dp_port1} ${topology[i].dp_port2} \n ${topology[i].delay}ms`,
+        id: topology[i].dport1 + "," + topology[i].dport2,
+        from: topology[i].dport1.split("-")[0],
+        to: topology[i].dport2.split("-")[0],
+        label: `${topology[i].dport1} ${topology[i].dport2} \n ${topology[i].delay}ms`,
       });
     }else {
       edges.push({
-        id: topology[i].dp_port1,
-        from: topology[i].dp_port1.split("-")[0],
-        to: topology[i].dp_port2,
-        label: `${topology[i].dp_port1}`
+        id: topology[i].dport1,
+        from: topology[i].dport1.split("-")[0],
+        to: topology[i].dport2,
+        label: `${topology[i].dport1}`
       });
     }
   }

@@ -12,22 +12,44 @@
 
 ActiveRecord::Schema.define(version: 20171114052131) do
 
-  create_table "topologies", force: :cascade do |t|
-    t.string "dp_port1"
-    t.string "dp_port2"
-    t.float "delay"
-    t.string "judge"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "hoge", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "id", null: false
+    t.string "dport1", null: false
+    t.string "dport2", null: false
+    t.integer "delay", null: false
+    t.string "judge", null: false
   end
 
-  create_table "vlans", force: :cascade do |t|
-    t.integer "vlanid"
-    t.string "start"
-    t.string "end"
-    t.string "path"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+  create_table "topologies", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "dport1", limit: 128
+    t.string "dport2", limit: 128
+    t.float "delay", limit: 24
+    t.string "judge", limit: 32
+    t.integer "updated"
+  end
+
+  create_table "topology", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "dport1", limit: 128
+    t.string "dport2", limit: 128
+    t.float "delay", limit: 24
+    t.string "judge", limit: 32
+    t.integer "updated"
+  end
+
+  create_table "vlan", primary_key: "vlan", id: :integer, default: nil, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "start", limit: 128
+    t.string "end", limit: 128
+    t.string "path", limit: 32
+    t.string "created_at", limit: 32
+    t.string "updated_at", limit: 32
+  end
+
+  create_table "vlans", primary_key: "vlanid", id: :integer, default: nil, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "start", limit: 128
+    t.string "end", limit: 128
+    t.string "path", limit: 32
+    t.string "created_at", limit: 32
+    t.string "updated_at", limit: 32
   end
 
 end
