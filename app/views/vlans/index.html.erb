@@ -1,0 +1,15 @@
+<h1>index</h1>
+<script>
+</script>
+<table>
+    <th>VLAN番号</th>
+    <th></th>
+    <th></th>
+  <% @vlans.each do |vlan| %>
+    <tr>
+      <td><%= vlan.vlanid %></td>
+      <td><%= link_to "show", vlan_path(vlan.vlanid), data: { "turbolinks" => false }%></td>
+      <td><%= link_to "delete", vlan_path(vlan.vlanid), :method => :delete %></td>
+    </tr>
+  <% end %>
+</table>
