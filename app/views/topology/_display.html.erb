@@ -25,19 +25,35 @@ for(i=0; i < hosts.length; i++) {
 // スイッチ間のつながりを表示する
 let edges = [];
 
+function delay_colorCheck(delay_time) {
+  let check = Math.round((((delay_time)*1000)*100))/100;
+  if (check >=100) {
+    return '#FF0040';
+  }else if(check >= 80){
+    return '#FF8000';
+  }else if(check >= 50){
+    return '#FFBF00';
+  }else{
+    return '#2E2EFE';
+  }
+}
+
 for(i=0; i < gon.topologies.length; i++) {
   if (topology[i].dport2 != null) {
     if (topology[i].dport2.match(/-/)) {
       edges.push({
         from: topology[i].dport1.split("-")[0],
         to: topology[i].dport2.split("-")[0],
-        label: `${topology[i].dport1} ${topology[i].dport2} \n ${Math.round((((topology[i].delay)*1000)*100))/100}ms`
+        label: `${topology[i].dport1} ${topology[i].dport2} \n ${Math.round((((topology[i].delay)*1000)*100))/100}ms`,
+        color: delay_colorCheck(topology[i].delay),
+        width: 3,
       });
     }else {
       edges.push({
         from: topology[i].dport1.split("-")[0],
         to: topology[i].dport2,
-        label: `${topology[i].dport1}`
+        label: `${topology[i].dport1}`,
+        width: 3,
       });
     }
   }
@@ -51,14 +67,9 @@ let data = {
   edges: edges
 };
 let options = {
-  edges:{
-    color: {
-      color:'#FE2E2E'
-    }
-  },
   layout: {
     randomSeed: 1
-  }
+  },
 };
 
 // initialize your network!
