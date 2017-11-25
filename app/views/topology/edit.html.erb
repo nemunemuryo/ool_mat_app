@@ -1,5 +1,5 @@
 <div id="mynetwork"></div>
-<pre><id="eventSpan"></pre>
+<!-- <pre><id="eventSpan"></pre> -->
 
 <%= render :partial => "divide" %>
 
@@ -34,7 +34,7 @@ for(i=0; i < gon.topologies.length; i++) {
         id: topology[i].dport1 + "," + topology[i].dport2,
         from: topology[i].dport1.split("-")[0],
         to: topology[i].dport2.split("-")[0],
-        label: `${topology[i].dport1} ${topology[i].dport2} \n ${topology[i].delay}ms`,
+        label: `${topology[i].dport1} ${topology[i].dport2} \n ${Math.round((((topology[i].delay)*1000)*100))/100}ms`,
       });
     }else {
       edges.push({
