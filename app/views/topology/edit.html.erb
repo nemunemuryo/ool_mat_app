@@ -1,3 +1,10 @@
+<h1>Edit</h1>
+
+<p>
+  ホストからホストへ繋ぎたい経路を順に選択してください <br>
+  新規の経路であればVLANを新規作成し, 既存の経路であればVLANを上書きします
+</p>
+
 <div id="mynetwork"></div>
 <!-- <pre><id="eventSpan"></pre> -->
 
@@ -105,32 +112,40 @@ function OnButtonClick() {
   let judge = 0;
   for(let i=0; i < gon.vlans.length; i++) {
     if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
-      judge++;
-      $.ajax({
-        url: 'http://0.0.0.0:3000/topology/update',
-        type: 'GET',
-        data: {
-          path: path.slice(0, -1),
-          start: start_end[0],
-          end: start_end[1]
-        }
-      })
-      .done(function(response){
-        console.log("success")
+      modifyCheck = confirm("VLAN番号: " + gon.vlans[i].vlanid + "を変更します よろしいですか?\n" + "変更前: " + gon.vlans[i].path + "\n変更後: " + path.slice(0, -1))
+      if (modifyCheck == true) {
+        alert("変更します")
         $.ajax({
-          url: `http://10.50.0.100:8080/modify/${start_end[0]}/${start_end[1]}`,
-          type: 'GET'
+          url: 'http://0.0.0.0:3000/topology/update',
+          type: 'GET',
+          data: {
+            path: path.slice(0, -1),
+            start: start_end[0],
+            end: start_end[1]
+          }
         })
         .done(function(response){
           console.log("success")
+          $.ajax({
+            url: `http://10.50.0.100:8080/modify/${start_end[0]}/${start_end[1]}`,
+            type: 'GET'
+          })
+          .done(function(response){
+            console.log("success")
+          })
+          .fail(function(xhr){
+            console.log("feild")
+          });
         })
         .fail(function(xhr){
           console.log("feild")
         });
-      })
-      .fail(function(xhr){
-        console.log("feild")
-      });
+      }else {
+        alert("キャンセルしました\n 経路を選んでください");
+        path = "";
+        start_end = [];
+      }
+      judge++;
       break;
     }
 
