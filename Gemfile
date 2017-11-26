@@ -35,6 +35,7 @@ gem 'jquery-rails'
 gem 'rails-ujs'
 gem 'visjs-rails', '~> 4.16', '>= 4.16.1.0'
 gem 'gon'
+gem 'bootstrap-sass'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

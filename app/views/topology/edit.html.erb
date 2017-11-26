@@ -5,6 +5,7 @@
   新規の経路であればVLANを新規作成し, 既存の経路であればVLANを上書きします
 </p>
 
+<div id=btn><input type="button" value="決定" onclick="OnButtonClick();"/><br /></div>
 <div id="mynetwork"></div>
 <!-- <pre><id="eventSpan"></pre> -->
 
@@ -105,10 +106,10 @@ network.on("click", function (params) {
 
 // ボタンクリック時
 function OnButtonClick() {
-  target = document.getElementById("output");
-  target2 = document.getElementById("output2");
-  target.innerHTML = path.slice(0, -1)
-  target2.innerHTML = start_end
+  // target = document.getElementById("output");
+  // target2 = document.getElementById("output2");
+  // target.innerHTML = path.slice(0, -1)
+  // target2.innerHTML = start_end
   let judge = 0;
   for(let i=0; i < gon.vlans.length; i++) {
     if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
@@ -198,7 +199,6 @@ function OnButtonClick() {
 
 }
 </script>
-<input type="button" value="Exec" onclick="OnButtonClick();"/><br />
-<br />
+<!-- <br />
 <div id="output"></div>
-<div id="output2"></div>
+<div id="output2"></div> -->
