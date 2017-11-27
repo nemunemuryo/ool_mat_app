@@ -1,3 +1,33 @@
 // Place all the styles related to the vlans controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+table {
+  width: 50%;
+  margin-left: 10px;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  th {
+    font-size: 20pt;
+    text-align: center;
+  }
+
+  td {
+    border-top: 1px #000000 solid;
+    font-size: 30pt;
+    //text-align: center;
+    line-height: 200%;
+
+  }
+}
+
+td.num {
+  text-align: center;
+}
+td.show {
+  text-align: right;
+  padding-right: 5px;
+}
+td.delete {
+  text-align: center;
+}
