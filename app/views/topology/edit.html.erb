@@ -43,13 +43,15 @@ for(i=0; i < gon.topologies.length; i++) {
         from: topology[i].dport1.split("-")[0],
         to: topology[i].dport2.split("-")[0],
         label: `${topology[i].dport1} ${topology[i].dport2} \n ${Math.round((((topology[i].delay)*1000)*100))/100}ms`,
+        width: 3,
       });
     }else {
       edges.push({
         id: topology[i].dport1,
         from: topology[i].dport1.split("-")[0],
         to: topology[i].dport2,
-        label: `${topology[i].dport1}`
+        label: `${topology[i].dport1}`,
+        width: 3,
       });
     }
   }
@@ -65,11 +67,6 @@ let data = {
   edges: edges
 };
 let options = {
-  edges:{
-    color: {
-      color:'#FE2E2E'
-    },
-  },
   layout: {
     randomSeed: 1
   }
@@ -113,7 +110,8 @@ function OnButtonClick() {
   let judge = 0;
   for(let i=0; i < gon.vlans.length; i++) {
     if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
-      if (start_end != 2) {
+      if (start_end.length != 2) {
+        console.log(start_end)
         alert("アクセスポートが1つ以下しか選ばれていないか, 3つ以上選ばれています. \n 1本の経路となるように選び直してください")
         path = "";
         start_end = [];

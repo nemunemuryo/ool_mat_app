@@ -27,11 +27,11 @@ let edges = [];
 
 function delay_colorCheck(delay_time) {
   let check = Math.round((((delay_time)*1000)*100))/100;
-  if (check >=100) {
+  if (check >=80) {
     return '#FF0040';
-  }else if(check >= 80){
-    return '#FF8000';
   }else if(check >= 50){
+    return '#FF8000';
+  }else if(check >= 20){
     return '#FFBF00';
   }else{
     return '#2E2EFE';

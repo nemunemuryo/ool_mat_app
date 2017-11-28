@@ -5,7 +5,22 @@
     <tr>
       <td class="num"><%= vlan.vlanid %></td>
       <td class="show"><%= link_to "show", vlan_path(vlan.vlanid), data: { "turbolinks" => false }%></td>
-      <td class="delete"><%= link_to "delete", vlan_path(vlan.vlanid), :method => :delete %></td>
+      <td class="delete"><%= link_to "delete", vlan_path(vlan.vlanid), :method => :delete, :onclick=>"test('#{vlan.vlanid}')" %></td>
     </tr>
   <% end %>
 </table>
+
+<script>
+function test(id) {
+  $.ajax({
+    url: `http://10.50.0.100:8080/del/${id}`,
+    type: 'GET'
+  })
+  .done(function(response){
+    console.log("success")
+  })
+  .fail(function(xhr){
+    console.log("feild")
+  });
+}
+</script>
