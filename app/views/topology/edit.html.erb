@@ -7,34 +7,18 @@
 
 <div id=btn><input type="button" value="決定" onclick="OnButtonClick();"/><br /></div>
 <div id="mynetwork"></div>
-<!-- <pre><id="eventSpan"></pre> -->
 
 <%= render :partial => "divide" %>
 
 <%= render :partial => "distinct" %>
 
+<%= render :partial => "nodes" %>
+
 <script>
-let nodes = [];
-for(i=0; i < distinctSwitches.length; i++) {
-  nodes.push({
-    id: distinctSwitches[i],
-    label: `Swicth \n0x${distinctSwitches[i]}`,
-    shape: 'box'
-  });
-}
-
-// ホストを表示する
-for(i=0; i < hosts.length; i++) {
-  nodes.push({
-    id: hosts[i],
-    label: `Host \n${hosts[i]}`,
-    shape: 'circle'
-  });
-}
-
 // スイッチ間のつながりを表示する
 let edges = [];
 
+// スイッチ間
 for(i=0; i < gon.topologies.length; i++) {
   if (topology[i].dport2 != null) {
     if (topology[i].dport2.match(/-/)) {
@@ -45,6 +29,7 @@ for(i=0; i < gon.topologies.length; i++) {
         label: `${topology[i].dport1} ${topology[i].dport2} \n ${Math.round((((topology[i].delay)*1000)*100))/100}ms`,
         width: 3,
       });
+// スイッチとホスト間
     }else {
       edges.push({
         id: topology[i].dport1,
@@ -74,24 +59,33 @@ let options = {
 
 // initialize your network!
 var network = new vis.Network(container, data, options);
+
 let path = "";
 let tmp = "";
 let comparison = [];
 let a = [];
 let start_end = [];
 
+// 初期化
+const initialization = () => {
+  path = "";
+  start_end = [];
+}
+
 // 画面内がクリックされた時
 network.on("click", function (params) {
+  // console.log(params.edges)
+  // スイッチ間の繋がり
   if (params.edges[0].match(/,/)) {
     comparison = params.edges[0].split(",");
+    // スイッチが順番に繋がっているかを判断して, 並び替える
     if (tmp != comparison[0][0]) {
-      let temp = comparison[0];
-      comparison[0] = comparison[1];
-      comparison[1] = temp;
+      comparison[1] = [comparison[0], comparison[0] = comparison[1]][0];
     }
     // console.log(comparison)
     tmp = comparison[1][0];
     path += comparison + "|";
+  // スイッチとホスト間の繋がり
   }else {
     tmp = params.edges[0][0]
     start_end.push(params.edges[0])
@@ -103,24 +97,28 @@ network.on("click", function (params) {
 
 // ボタンクリック時
 function OnButtonClick() {
-  // target = document.getElementById("output");
-  // target2 = document.getElementById("output2");
-  // target.innerHTML = path.slice(0, -1)
-  // target2.innerHTML = start_end
-  let judge = 0;
+  // 新規か既存かを判断
+  let judge = false;
   for(let i=0; i < gon.vlans.length; i++) {
+    // 既存のvlanのアクセスポートが選ばれたものがあるかどうか判断
+      console.log(gon.vlans[i].start)
+      console.log(gon.vlans[i].end)
     if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
+      // 2以外だったとき
       if (start_end.length != 2) {
-        console.log(start_end)
+        // console.log(start_end)
         alert("アクセスポートが1つ以下しか選ばれていないか, 3つ以上選ばれています. \n 1本の経路となるように選び直してください")
-        path = "";
-        start_end = [];
-        judge++;
+        // 初期化
+        initialization();
+        judge = true;
         break;
       }
       modifyCheck = confirm("VLAN番号: " + gon.vlans[i].vlanid + "を変更します よろしいですか?\n" + "変更前: " + gon.vlans[i].path + "\n変更後: " + path.slice(0, -1))
+      // okが押されたら
       if (modifyCheck == true) {
+        console.log()
         alert("変更します")
+        // updateアクションを実行
         $.ajax({
           url: 'http://0.0.0.0:3000/topology/update',
           type: 'GET',
@@ -130,39 +128,52 @@ function OnButtonClick() {
             end: start_end[1]
           }
         })
+        // 成功したら
         .done(function(response){
-          console.log("success")
+          // console.log("success")
+          // ryuにmodifyAPIを投げる
           $.ajax({
             url: `http://10.50.0.100:8080/modify/${start_end[0]}/${start_end[1]}`,
             type: 'GET'
           })
-          .done(function(response){
-            console.log("success")
-          })
-          .fail(function(xhr){
-            console.log("feild")
-          });
+          // 成功したら
+          // .done(function(response){
+          //   console.log("success")
+          // })
+          //　失敗したら
+          // .fail(function(xhr){
+          //   console.log("feild")
+          // });
+          location.reload();
         })
+        // 失敗したら
         .fail(function(xhr){
-          console.log("feild")
+        //   console.log("feild")
         });
+      // キャンセルが押されたら
       }else {
         alert("キャンセルしました\n 経路を選んでください");
-        path = "";
-        start_end = [];
+        // 初期化
+        initialization();
       }
-      judge++;
+      judge = true;
       break;
     }
 
   }
-  if(judge==0) {
+  if(judge==false) {
     let vlan_num=prompt("追加したいVLAN番号を入力してください");
     if(vlan_num==null){
       /* [キャンセル]ボタンが押下された場合 */
       alert("作成しませんでした");
+      // 初期化
+      initialization();
+    }else if(vlan_num==""){
+      alert("VLAN番号を入力してください");
+      // 初期化
+      initialization();
     }else{
-      /* 入力値を表示 */
+      // addvlanアクションを実行
       $.ajax({
         url: 'http://0.0.0.0:3000/topology/addvlan',
         type: 'GET',
@@ -173,30 +184,33 @@ function OnButtonClick() {
           path: path.slice(0, -1)
         }
       })
+      // 成功したら
       .done(function(response){
-        console.log("success")
+        // console.log("success")
+        // ryuにaddAPIを投げる
         $.ajax({
           url: `http://10.50.0.100:8080/add/${start_end[0]}/${start_end[1]}`,
           type: 'GET'
         })
-        .done(function(response){
-          console.log("success")
-        })
-        .fail(function(xhr){
-          console.log("feild")
-        });
+        // 成功したら
+        // .done(function(response){
+        //   console.log("success")
+        // })
+        // 失敗したら
+        // .fail(function(xhr){
+        //   console.log("feild")
+        // });
+        location.reload();
       })
-      .fail(function(xhr){
-        console.log("feild")
-      });
+      // 失敗したら
+      // .fail(function(xhr){
+      //   console.log("feild")
+      // });
     }
-    judge--;
   }else {
-    judge--;
+    // 既存のときの処理がされたらjudgeを初期化する
+    judge = false;
   }
 
 }
 </script>
-<!-- <br />
-<div id="output"></div>
-<div id="output2"></div> -->

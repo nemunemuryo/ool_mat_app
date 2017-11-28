@@ -1,0 +1,19 @@
+<script>
+let nodes = [];
+for(i=0; i < distinctSwitches.length; i++) {
+  nodes.push({
+    id: distinctSwitches[i],
+    label: `Swicth \n0x${distinctSwitches[i]}`,
+    shape: 'box'
+  });
+}
+
+// ホストを表示する
+for(i=0; i < hosts.length; i++) {
+  nodes.push({
+    id: hosts[i],
+    label: `Host \n${hosts[i]}`,
+    shape: 'circle'
+  });
+}
+</script>

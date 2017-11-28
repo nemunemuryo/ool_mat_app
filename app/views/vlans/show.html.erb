@@ -1,5 +1,4 @@
 <div id=output>
-  <p>合計の遅延量</p>
 </div>
 <div id="mynetwork"></div>
 <!-- <pre><id="eventSpan"></pre> -->
@@ -8,25 +7,9 @@
 
 <%= render :partial => "topology/distinct" %>
 
+<%= render :partial => "topology/nodes" %>
+
 <script>
-let nodes = [];
-for(i=0; i < distinctSwitches.length; i++) {
-  nodes.push({
-    id: distinctSwitches[i],
-    label: `Swicth \n0x${distinctSwitches[i]}`,
-    shape: 'box'
-  });
-}
-
-// ホストを表示する
-for(i=0; i < hosts.length; i++) {
-  nodes.push({
-    id: hosts[i],
-    label: `Host \n${hosts[i]}`,
-    shape: 'circle'
-  });
-}
-
 // 繋がりを表示する
 let edges = [];
 
@@ -88,7 +71,7 @@ for(i=0; i < gon.topologies.length; i++) {
 // create a network
 let container = document.getElementById('mynetwork');
 target = document.getElementById("output");
-target.innerHTML += sum
+target.innerHTML = "合計の遅延量: " + sum +"ms"
 
 // provide the data in the vis format
 let data = {
