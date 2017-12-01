@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  mild: 1
+  moderate: 1
+  severe: 1
+
+two:
+  mild: 1
+  moderate: 1
+  severe: 1

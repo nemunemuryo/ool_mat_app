@@ -1,0 +1,12 @@
+<%= form_for @warnings, url: config_path do |f| %>
+  <%= f.label :mild, "軽度" %>
+  <%= f.text_field :mild %>
+  <%= f.label :mild, "ms" %>
+  <%= f.label :moderate, "中度" %>
+  <%= f.text_field :moderate %>
+  <%= f.label :moderate, "ms" %>
+  <%= f.label :severe, "重度" %>
+  <%= f.text_field :severe %>
+  <%= f.label :severe, "ms" %>
+  <%= f.submit "決定" %>
+<% end %>

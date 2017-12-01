@@ -5,21 +5,33 @@
 <%= render :partial => "nodes" %>
 
 <script>
-// スイッチ間のつながりを表示する
-let edges = [];
+  let mildWarning = 0;
+  let moderateWarning = 0;
+  let severeWarning = 0;
+
+  console.log(gon.waring)
+
+if (gon.warning != undefined) {
+  mildWarning = gon.warning.mild;
+  moderateWarning = gon.warning.moderate;
+  severeWarning = gon.warning.severe;
+}
 
 function delay_colorCheck(delay_time) {
   let check = Math.round((((delay_time)*1000)*100))/100;
-  if (check >=80) {
-    return '#FF0040';
-  }else if(check >= 50){
-    return '#FF8000';
-  }else if(check >= 20){
-    return '#FFBF00';
-  }else{
-    return '#2E2EFE';
+  if(mildWarning != 0 || moderateWarning != 0 || severeWarning != 0) {
+    if (check >= severeWarning) {
+      return '#FF0040';
+    }else if(check >= moderateWarning){
+      return '#FF8000';
+    }else if(check >= mildWarning){
+      return '#FFBF00';
+    }
   }
 }
+// スイッチ間のつながりを表示する
+let edges = [];
+
 
 for(i=0; i < gon.topologies.length; i++) {
   if (topology[i].dport2 != null) {

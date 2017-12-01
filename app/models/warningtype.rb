@@ -1,0 +1,2 @@
+class Warningtype < ApplicationRecord
+end

@@ -29,7 +29,7 @@ for(i=0; i < gon.topologies.length; i++) {
         label: `${topology[i].dport1} ${topology[i].dport2} \n ${Math.round((((topology[i].delay)*1000)*100))/100}ms`,
         width: 3,
       });
-// スイッチとホスト間
+      // スイッチとホスト間
     }else {
       edges.push({
         id: topology[i].dport1,
@@ -66,11 +66,47 @@ let comparison = [];
 let a = [];
 let start_end = [];
 
+// ループチェック
+let roopCheck = {};
+//let roopCheck_tmp = {};
+
+distinctSwitches.forEach(
+  (value) => {
+    //switchName: roopCheck[value] = 0,
+    roopCheck[value] = 0
+    // console.log(roopCheck_tmp)
+    // console.log(roopCheck)
+    // $.extend(roopCheck, roopCheck_tmp)
+    // roopCheck.push(roopCheck_tmp)
+  }
+)
+
+
+// var filtered = $.grep(roopCheck, (elem) => {
+//   return (elem[value] = 0);
+// })
+
+//console.log(roopCheck)
+
+// console.log(roopCheck)
+
 // 初期化
 const initialization = () => {
   path = "";
   start_end = [];
 }
+
+var arrayGetValues = function(array) {
+  var values = [];
+
+  if (array) {
+    for (var key in array) {
+      values.push(array[key]);
+    }
+  }
+
+  return values;
+};
 
 // 画面内がクリックされた時
 network.on("click", function (params) {
@@ -82,10 +118,13 @@ network.on("click", function (params) {
     if (tmp != comparison[0][0]) {
       comparison[1] = [comparison[0], comparison[0] = comparison[1]][0];
     }
-    // console.log(comparison)
+    console.log(comparison)
+    // 作業中
+    roopCheck[comparison[1].split("-")[0]]++;
+    console.log(roopCheck)
     tmp = comparison[1][0];
     path += comparison + "|";
-  // スイッチとホスト間の繋がり
+    // スイッチとホスト間の繋がり
   }else {
     tmp = params.edges[0][0]
     start_end.push(params.edges[0])
@@ -97,12 +136,14 @@ network.on("click", function (params) {
 
 // ボタンクリック時
 function OnButtonClick() {
+  // console.log(start_end[0])
+  console.log(roopCheck[start_end[0].split("-")[0]]++);
   // 新規か既存かを判断
   let judge = false;
   for(let i=0; i < gon.vlans.length; i++) {
     // 既存のvlanのアクセスポートが選ばれたものがあるかどうか判断
-      console.log(gon.vlans[i].start)
-      console.log(gon.vlans[i].end)
+    console.log(gon.vlans[i].start)
+    console.log(gon.vlans[i].end)
     if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
       // 2以外だったとき
       if (start_end.length != 2) {
@@ -113,6 +154,9 @@ function OnButtonClick() {
         judge = true;
         break;
       }
+      // if () {
+      //
+      // }
       modifyCheck = confirm("VLAN番号: " + gon.vlans[i].vlanid + "を変更します よろしいですか?\n" + "変更前: " + gon.vlans[i].path + "\n変更後: " + path.slice(0, -1))
       // okが押されたら
       if (modifyCheck == true) {
@@ -148,9 +192,9 @@ function OnButtonClick() {
         })
         // 失敗したら
         .fail(function(xhr){
-        //   console.log("feild")
+          //   console.log("feild")
         });
-      // キャンセルが押されたら
+        // キャンセルが押されたら
       }else {
         alert("キャンセルしました\n 経路を選んでください");
         // 初期化
@@ -161,55 +205,75 @@ function OnButtonClick() {
     }
 
   }
-  if(judge==false) {
-    let vlan_num=prompt("追加したいVLAN番号を入力してください");
-    if(vlan_num==null){
-      /* [キャンセル]ボタンが押下された場合 */
-      alert("作成しませんでした");
-      // 初期化
-      initialization();
-    }else if(vlan_num==""){
-      alert("VLAN番号を入力してください");
-      // 初期化
-      initialization();
-    }else{
-      // addvlanアクションを実行
-      $.ajax({
-        url: 'http://0.0.0.0:3000/topology/addvlan',
-        type: 'GET',
-        data: {
-          newVlan: vlan_num,
-          start: start_end[0],
-          end: start_end[1],
-          path: path.slice(0, -1)
-        }
-      })
-      // 成功したら
-      .done(function(response){
-        // console.log("success")
-        // ryuにaddAPIを投げる
+  let filtered = arrayGetValues(roopCheck).filter(function(element) {
+    return (element >= 2)
+  })
+  console.log(filtered)
+  if (filtered >= 2) {
+    alert("ループ ダメ 絶対")
+    initialization();
+  }else {
+    if(judge==false) {
+      // roopCheck[start_end[0]]++;
+      // Object.keys(roopCheck).forEach((key) => {
+      //   if (roopCheck[key] >= 2) {
+      //     alert("ループ ダメ 絶対")
+      //   }
+      // });
+      //roopCheck[start_end[0]]++;
+      //console.log(roopCheck[start_end[0].split("-")[0]]);
+      // Object.keys(roopCheck).forEach((key) => {
+      //   console.log(roopCheck[key])
+      // });
+      let vlan_num=prompt("追加したいVLAN番号を入力してください");
+      if(vlan_num==null){
+        /* [キャンセル]ボタンが押下された場合 */
+        alert("作成しませんでした");
+        // 初期化
+        initialization();
+      }else if(vlan_num==""){
+        alert("VLAN番号を入力してください");
+        // 初期化
+        initialization();
+      }else{
+        // addvlanアクションを実行
         $.ajax({
-          url: `http://10.50.0.100:8080/add/${start_end[0]}/${start_end[1]}`,
-          type: 'GET'
+          url: 'http://0.0.0.0:3000/topology/addvlan',
+          type: 'GET',
+          data: {
+            newVlan: vlan_num,
+            start: start_end[0],
+            end: start_end[1],
+            path: path.slice(0, -1)
+          }
         })
         // 成功したら
-        // .done(function(response){
-        //   console.log("success")
-        // })
+        .done(function(response){
+          // console.log("success")
+          // ryuにaddAPIを投げる
+          $.ajax({
+            url: `http://10.50.0.100:8080/add/${start_end[0]}/${start_end[1]}`,
+            type: 'GET'
+          })
+          // 成功したら
+          // .done(function(response){
+          //   console.log("success")
+          // })
+          // 失敗したら
+          // .fail(function(xhr){
+          //   console.log("feild")
+          // });
+          location.reload();
+        })
         // 失敗したら
         // .fail(function(xhr){
         //   console.log("feild")
         // });
-        location.reload();
-      })
-      // 失敗したら
-      // .fail(function(xhr){
-      //   console.log("feild")
-      // });
+      }
+    }else {
+      // 既存のときの処理がされたらjudgeを初期化する
+      judge = false;
     }
-  }else {
-    // 既存のときの処理がされたらjudgeを初期化する
-    judge = false;
   }
 
 }
