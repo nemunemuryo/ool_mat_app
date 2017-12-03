@@ -4,7 +4,8 @@ class TopologyController < ApplicationController
     @topologies = Topology.all
     gon.topologies = @topologies
     unless Warningtype.first == nil
-      gon.warning = Warningtype.first
+      @warning = Warningtype.first
+      gon.warning = @warning
     end
   end
 
@@ -38,7 +39,6 @@ class TopologyController < ApplicationController
     else
       Warningtype.create(mild: params[:warningtype][:mild], moderate: params[:warningtype][:moderate], severe: params[:warningtype][:severe])
     end
-    redirect_to config_path
   end
 
   def addvlan

@@ -12,5 +12,7 @@ Rails.application.routes.draw do
   get 'config', to: 'topology#configs'
   patch 'config', to: 'topology#configsmodify'
   post 'config', to: 'topology#configsmodify'
+  patch 'user', to: 'topology#usermodify'
+  post 'user', to: 'topology#usermodify'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
