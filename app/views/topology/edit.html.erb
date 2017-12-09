@@ -72,23 +72,9 @@ let roopCheck = {};
 
 distinctSwitches.forEach(
   (value) => {
-    //switchName: roopCheck[value] = 0,
     roopCheck[value] = 0
-    // console.log(roopCheck_tmp)
-    // console.log(roopCheck)
-    // $.extend(roopCheck, roopCheck_tmp)
-    // roopCheck.push(roopCheck_tmp)
   }
 )
-
-
-// var filtered = $.grep(roopCheck, (elem) => {
-//   return (elem[value] = 0);
-// })
-
-//console.log(roopCheck)
-
-// console.log(roopCheck)
 
 // 初期化
 const initialization = () => {
@@ -118,10 +104,10 @@ network.on("click", function (params) {
     if (tmp != comparison[0][0]) {
       comparison[1] = [comparison[0], comparison[0] = comparison[1]][0];
     }
-    console.log(comparison)
+    //console.log(comparison)
     // 作業中
     roopCheck[comparison[1].split("-")[0]]++;
-    console.log(roopCheck)
+    //console.log(roopCheck)
     tmp = comparison[1][0];
     path += comparison + "|";
     // スイッチとホスト間の繋がり
@@ -140,91 +126,83 @@ function OnButtonClick() {
   console.log(roopCheck[start_end[0].split("-")[0]]++);
   // 新規か既存かを判断
   let judge = false;
-  for(let i=0; i < gon.vlans.length; i++) {
-    // 既存のvlanのアクセスポートが選ばれたものがあるかどうか判断
-    console.log(gon.vlans[i].start)
-    console.log(gon.vlans[i].end)
-    if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
-      // 2以外だったとき
-      if (start_end.length != 2) {
-        // console.log(start_end)
-        alert("アクセスポートが1つ以下しか選ばれていないか, 3つ以上選ばれています. \n 1本の経路となるように選び直してください")
-        // 初期化
-        initialization();
-        judge = true;
-        break;
-      }
-      // if () {
-      //
-      // }
-      modifyCheck = confirm("VLAN番号: " + gon.vlans[i].vlanid + "を変更します よろしいですか?\n" + "変更前: " + gon.vlans[i].path + "\n変更後: " + path.slice(0, -1))
-      // okが押されたら
-      if (modifyCheck == true) {
-        console.log()
-        alert("変更します")
-        // updateアクションを実行
-        $.ajax({
-          url: 'http://0.0.0.0:3000/topology/update',
-          type: 'GET',
-          data: {
-            path: path.slice(0, -1),
-            start: start_end[0],
-            end: start_end[1]
-          }
-        })
-        // 成功したら
-        .done(function(response){
-          // console.log("success")
-          // ryuにmodifyAPIを投げる
-          $.ajax({
-            url: `http://10.50.0.100:8080/modify/${start_end[0]}/${start_end[1]}`,
-            type: 'GET'
-          })
-          // 成功したら
-          // .done(function(response){
-          //   console.log("success")
-          // })
-          //　失敗したら
-          // .fail(function(xhr){
-          //   console.log("feild")
-          // });
-          location.reload();
-        })
-        // 失敗したら
-        .fail(function(xhr){
-          //   console.log("feild")
-        });
-        // キャンセルが押されたら
-      }else {
-        alert("キャンセルしました\n 経路を選んでください");
-        // 初期化
-        initialization();
-      }
-      judge = true;
-      break;
-    }
-
-  }
+  // 追加
   let filtered = arrayGetValues(roopCheck).filter(function(element) {
     return (element >= 2)
   })
-  console.log(filtered)
+  // console.log(filtered)
   if (filtered >= 2) {
     alert("ループ ダメ 絶対")
     initialization();
   }else {
+    for(let i=0; i < gon.vlans.length; i++) {
+      // 既存のvlanのアクセスポートが選ばれたものがあるかどうか判断
+      // console.log(gon.vlans[i].start)
+      // console.log(gon.vlans[i].end)
+      if(gon.vlans[i].start==start_end[0] || gon.vlans[i].end==start_end[0]) {
+        // 2以外だったとき
+        if (start_end.length != 2) {
+          // console.log(start_end)
+          alert("アクセスポートが1つ以下しか選ばれていないか, 3つ以上選ばれています. \n 1本の経路となるように選び直してください")
+          // 初期化
+          initialization();
+          judge = true;
+          break;
+        }
+        // if () {
+        //
+        // }
+        modifyCheck = confirm("VLAN番号: " + gon.vlans[i].vlanid + "を変更します よろしいですか?\n" + "変更前: " + gon.vlans[i].path + "\n変更後: " + path.slice(0, -1))
+        // okが押されたら
+        if (modifyCheck == true) {
+          // console.log()
+          alert("変更します")
+          // updateアクションを実行
+          console.log(start_end)
+          console.log(path)
+          $.ajax({
+            url: 'http://0.0.0.0:3000/topology/update',
+            type: 'GET',
+            data: {
+              path: path.slice(0, -1),
+              start: start_end[0],
+              end: start_end[1]
+            }
+          })
+          // 成功したら
+          .done(function(response){
+            // console.log("success")
+            // ryuにmodifyAPIを投げる
+            $.ajax({
+              url: `http://10.50.0.100:8080/modify/${start_end[0]}/${start_end[1]}`,
+              type: 'GET'
+            })
+            // 成功したら
+            // .done(function(response){
+            //   console.log("success")
+            // })
+            //　失敗したら
+            // .fail(function(xhr){
+            //   console.log("feild")
+            // });
+            location.reload();
+          })
+          // 失敗したら
+          .fail(function(xhr){
+            //   console.log("feild")
+          });
+          // キャンセルが押されたら
+        }else {
+          alert("キャンセルしました\n 経路を選んでください");
+          // 初期化
+          initialization();
+        }
+        judge = true;
+        break;
+      }
+
+    }
     if(judge==false) {
-      // roopCheck[start_end[0]]++;
-      // Object.keys(roopCheck).forEach((key) => {
-      //   if (roopCheck[key] >= 2) {
-      //     alert("ループ ダメ 絶対")
-      //   }
-      // });
-      //roopCheck[start_end[0]]++;
-      //console.log(roopCheck[start_end[0].split("-")[0]]);
-      // Object.keys(roopCheck).forEach((key) => {
-      //   console.log(roopCheck[key])
-      // });
       let vlan_num=prompt("追加したいVLAN番号を入力してください");
       if(vlan_num==null){
         /* [キャンセル]ボタンが押下された場合 */
@@ -236,6 +214,8 @@ function OnButtonClick() {
         // 初期化
         initialization();
       }else{
+        console.log(start_end)
+        console.log(path)
         // addvlanアクションを実行
         $.ajax({
           url: 'http://0.0.0.0:3000/topology/addvlan',
@@ -266,15 +246,16 @@ function OnButtonClick() {
           location.reload();
         })
         // 失敗したら
-        // .fail(function(xhr){
-        //   console.log("feild")
-        // });
+        .fail(function(xhr){
+          console.log("feild")
+        });
       }
     }else {
       // 既存のときの処理がされたらjudgeを初期化する
       judge = false;
     }
   }
+  //}
 
 }
 </script>

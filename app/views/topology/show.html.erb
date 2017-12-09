@@ -8,8 +8,8 @@
   <% @topologies.each do |topology| %>
     <% unless topology.delay == nil %>
       <% if (((((topology.delay)*1000)*100)).round).to_f/100 >= @warning.severe %>
-        <% notifier = Slack::Notifier.new "<Your Webhook URL" %> #事前準備で取得したWebhook URL
-        <% notifier.ping("Switch: 0x" + topology.dport1.split("-")[0] + " port番号: " + topology.dport1.split("-")[1] + "," + "Switch: 0x" + topology.dport2.split("-")[0] + " port番号: " + topology.dport2.split("-")[1] + "間で致命的な遅延が発生しています") %>
+        <% notifier = Slack::Notifier.new "<bot URL>" %>
+        <% notifier.ping("Switch: 0x" + topology.dport1.split("-")[0] + " port番号: " + topology.dport1.split("-")[1] + ", " + "Switch: 0x" + topology.dport2.split("-")[0] + " port番号: " + topology.dport2.split("-")[1] + " 間で致命的な遅延が発生しています") %>
       <% end %>
     <% end %>
   <% end %>
